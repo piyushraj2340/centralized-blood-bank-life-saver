@@ -71,10 +71,9 @@ app.use('',router);
 //     // })
 // }
 
-app.use(express.static("client/build"));
 app.get("*", (req,res) => {
-    res.status(200).redirect('/');
-})
+    res.status(404).send("404 error");
+});
 
 // if(process.env.NODE_ENV == "production") {
 //     app.use(express.static("client/build"));
