@@ -24,8 +24,8 @@ const port = process.env.PORT || 8000;
 const app = express();
 
 // static web page path right not not implemented 
-const staticPath = path.join(__dirname, "../public");
-app.use(express.static(staticPath));
+// const staticPath = path.join(__dirname, "../public");
+// app.use(express.static(staticPath));
 
 // using the middleware json , cookieParser and urlencoded
 app.use(express.json());
@@ -55,9 +55,13 @@ app.use('',router);
 
 
 // if no such path found the display 404 not found error 
-app.get("*", (req,res) => {
-    res.status(404).send("404 error");
-});
+// app.get("*", (req,res) => {
+//     app.use(express.static("client/build"));
+//     const path = require("path");
+//     const clientPath = path.join(__dirname, "../client");
+//     console.log(path.resolve(__dirname, clientPath ,'build','index.html'));
+//     res.sendFile(path.resolve(__dirname, clientPath ,'build','index.html'));
+// });
 
 // if(process.env.NODE_ENV == "production") {
 //     const path = require('path');
@@ -66,6 +70,28 @@ app.get("*", (req,res) => {
 //     //     res.sendFile(path.resolve(__dirname,'public','index.html'))
 //     // })
 // }
+
+// app.use(express.static("client/build"));
+// app.get("*", (req,res) => {
+//     res.status(200).redirect('/');
+// })
+
+if(process.env.NODE_ENV == "production") {
+    app.use(express.static("client/build"));
+    const path = require("path");
+    
+    app.get("*", (req, res) => {
+        const clientPath = path.join(__dirname, "../client");
+        res.sendFile(path.resolve(__dirname, clientPath ,'build','index.html'));
+    });
+    console.log("working");
+} else {
+    app.use(express.static("client/build"));
+    app.get("*", (req,res) => {
+        res.status(200).redirect('/');
+    });
+    console.log("not working");
+}
 
 app.listen(port,() => {
     console.log(`Listing to port: ${port}`);
@@ -83,3 +109,6 @@ app.listen(port,() => {
 // admin panel 
 // 
 
+
+
+// "proxy": "http://localhost:8000/",
